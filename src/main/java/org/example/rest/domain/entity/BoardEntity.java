@@ -13,4 +13,8 @@ import lombok.*;
 public class BoardEntity extends BaseEntity {
     private String title;
     private String content;
+    public void update(BoardEntity boardEntity) {
+        this.title = boardEntity.getTitle();
+        this.content = boardEntity.getContent();
+    }
 }

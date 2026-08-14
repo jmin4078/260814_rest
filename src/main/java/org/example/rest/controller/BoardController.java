@@ -5,10 +5,10 @@ import org.example.rest.domain.entity.BoardEntity;
 import org.example.rest.dto.BoardRequestDTO;
 import org.example.rest.dto.BoardResponseDTO;
 import org.example.rest.service.BoardService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
 
 //@Controller // return시 뷰 이름이나 ModelAndView 등을 통해서 뷰 리졸버 처리를 지시
 @RestController // -> ResponseBody를 알아서 붙여준다
@@ -28,5 +28,25 @@ public class BoardController {
         return BoardResponseDTO.fromEntity(saved);
     }
 
+    @GetMapping
+    public List<BoardResponseDTO> readAll() {
+        List<BoardEntity> boards = boardService.readAll();
+        return boards.stream()
+                .map(BoardResponseDTO::fromEntity)
+                .toList();
+    }
 
+    @GetMapping("/{uuid}")
+    public BoardResponseDTO readOne(@PathVariable UUID uuid) {
+        BoardEntity boardEntity = boardService.readOne(uuid);
+        return BoardResponseDTO.fromEntity(boardEntity);
+    }
+    @PutMapping("/{uuid}")
+    public BoardResponseDTO update(
+            @PathVariable UUID uuid,
+            @RequestBody BoardRequestDTO boardRequestDTO) {
+        // title, content를 한 번에 수정해줄 수 있는 형태
+        BoardEntity updated = boardService.update(uuid, boardRequestDTO.toEntity());
+        return BoardResponseDTO.fromEntity(updated);
+    }
 }

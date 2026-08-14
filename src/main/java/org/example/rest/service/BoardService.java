@@ -20,7 +20,12 @@ public class BoardService {
     public BoardEntity create(BoardEntity boardEntity) {
         return boardRepository.save(boardEntity);
     }
-
+    @Transactional
+    public BoardEntity update(UUID uuid, BoardEntity boardEntity) {
+        BoardEntity entity = readOne(uuid); // 없으면 에러 나옴
+        entity.update(boardEntity);
+        return entity;
+    }
     // Read (all)
     public List<BoardEntity> readAll() {
         return boardRepository.findAll();
